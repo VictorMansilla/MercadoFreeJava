@@ -49,6 +49,42 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+
+
+		<dependency>
+    		<groupId>io.jsonwebtoken</groupId>   <!-- Estos son JWT -->
+    		<artifactId>jjwt-api</artifactId>
+    		<version>0.11.5</version>
+		</dependency>
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-impl</artifactId>
+		    <version>0.11.5</version>
+		</dependency>
+		<dependency>
+		    <groupId>io.jsonwebtoken</groupId>
+		    <artifactId>jjwt-jackson</artifactId>
+		    <version>0.11.5</version>
+		</dependency>
+
+
+		<dependency>
+		    <groupId>io.github.cdimascio</groupId>   <!-- Este es Dotenv -->
+		    <artifactId>java-dotenv</artifactId>
+		    <version>5.2.2</version>
+		</dependency>
+
+
+
+		<dependency>
+		    <groupId>org.springframework.security</groupId> <!-- Este es Bcrypt -->
+		    <artifactId>spring-security-core</artifactId>
+		    <version>5.8.0</version> <!-- O la versión más reciente -->
+		</dependency>
+
+
+
 	</dependencies>
 
 	<build>

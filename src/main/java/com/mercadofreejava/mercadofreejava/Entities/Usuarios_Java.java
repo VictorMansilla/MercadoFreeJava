@@ -1,5 +1,6 @@
 package com.mercadofreejava.mercadofreejava.Entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,10 +12,14 @@ public class Usuarios_Java {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nombre_usuario;
-    private String contrasegna_usuario;
-    private String email_usuario;
-    private String telefono_usuario;
+    @Column(length = 100, unique = true, nullable = false)
+    private String nombreUsuario;
+    @Column(length = 500, nullable = false)
+    private String contrasegnaUsuario;
+    @Column(length = 150, nullable = true)
+    private String emailUsuario;
+    @Column(length = 30, nullable = true)
+    private String telefonoUsuario;
 
     public Long getId() {
         return id;
@@ -24,35 +29,35 @@ public class Usuarios_Java {
         this.id = id;
     }
     
-    public String getNombre_usuario() {
-        return nombre_usuario;
+    public String getNombreUsuario() {
+        return nombreUsuario;
     }
 
-    public void setNombre_usuario(String nombre_usuario) {
-        this.nombre_usuario = nombre_usuario;
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
     }
 
-    public String getContrasegna_usuario() {
-        return contrasegna_usuario;
+    public String getContrasegnaUsuario() {
+        return contrasegnaUsuario;
     }
 
-    public void setContrasegna_usuario(String contrasegna_usuario) {
-        this.contrasegna_usuario = contrasegna_usuario;
+    public void setContrasegnaUsuario(String contrasegnaUsuario) {
+        this.contrasegnaUsuario = contrasegnaUsuario;
     }
 
-    public String getEmail_usuario() {
-        return email_usuario;
+    public String getEmailUsuario() {
+        return emailUsuario;
     }
 
-    public void setEmail_usuario(String email_usuario) {
-        this.email_usuario = email_usuario;
+    public void setEmailUsuario(String emailUsuario) {
+        this.emailUsuario = emailUsuario;
     }
 
-    public String getTelefono_usuario() {
-        return telefono_usuario;
+    public String getTelefonoUsuario() {
+        return telefonoUsuario;
     }
 
-    public void setTelefono_usuario(String telefono_usuario) {
-        this.telefono_usuario = telefono_usuario;
+    public void setTelefonoUsuario(String telefonoUsuario) {
+        this.telefonoUsuario = telefonoUsuario;
     }
 }
