@@ -25,15 +25,10 @@ import com.mercadofreejava.mercadofreejava.tokenjwt.tokenjwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.UnsupportedJwtException;
-import io.github.cdimascio.dotenv.Dotenv;
 
 @RestController
 @RequestMapping("/Usuarios")
 public class UsuariosController {
-    private Dotenv dotenv = Dotenv.load();
     
     @Autowired
     private UsuarioRepositorio usuarioRepositorio;
@@ -139,13 +134,13 @@ public class UsuariosController {
         try {
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 String token = authHeader.substring(7);
-                String SECRET_KEY = dotenv.get("SECRET_KEY");
-                Claims token_deployado = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+                tokenjwt tokenjwt = new tokenjwt();
+                Claims token_deployado = tokenjwt.Deployar_Token(token);
                 Long id_obtenido_del_token = token_deployado.get("id", Long.class);
 
                 if (usuarioRepositorio.existsById(id_obtenido_del_token)) {
                     Usuarios_Java usuario = usuarioRepositorio.getById(id_obtenido_del_token);
-                    return ResponseEntity.status(HttpStatus.ACCEPTED).body(String.format("{'nombreUsuario' : %s, 'emailUsuario' : %s, 'telefonoUsuario' : %s}", usuario.getNombreUsuario(), usuario.getEmailUsuario(), usuario.getTelefonoUsuario()));
+                    return ResponseEntity.status(HttpStatus.ACCEPTED).body(String.format("{'id' : %s, 'nombreUsuario' : %s, 'emailUsuario' : %s, 'telefonoUsuario' : %s}", usuario.getId(), usuario.getNombreUsuario(), usuario.getEmailUsuario(), usuario.getTelefonoUsuario()));
                     
                 } else {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format("El usuario %s no existe", token_deployado.getSubject()));
@@ -155,17 +150,8 @@ public class UsuariosController {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se envió el token");
             }
 
-        } catch (UnsupportedJwtException  e) {
-            return ResponseEntity.status(HttpStatus.valueOf(400)).body("Error al decodificar el token");
-
-        } catch (ExpiredJwtException e) {
-            return ResponseEntity.status(HttpStatus.valueOf(406)).body("El token a expirado");
-
-        } catch (JwtException e) {
-            return ResponseEntity.status(HttpStatus.valueOf(409)).body("Error en la validación del token");
-
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.valueOf(500)).body("Ocurrió un error en el servidor");
+            return ResponseEntity.status(HttpStatus.valueOf(500)).body("Ocurrió un error en el servidor: "+ e.getMessage());
         } 
     }
     
@@ -188,9 +174,8 @@ public class UsuariosController {
 
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 String token = authHeader.substring(7);
-                String SECRET_KEY = dotenv.get("SECRET_KEY");
-                Claims token_deployado = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
-
+                tokenjwt tokenjwt = new tokenjwt();
+                Claims token_deployado = tokenjwt.Deployar_Token(token);
                 Long id_obtenido_del_token = token_deployado.get("id", Long.class);
 
                 if (usuarioRepositorio.existsById(id_obtenido_del_token)) {
@@ -237,18 +222,9 @@ public class UsuariosController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format("Datos no enviados en %s",e.getMessage()));
 
-        } catch (UnsupportedJwtException  e) {
-            return ResponseEntity.status(HttpStatus.valueOf(400)).body("Error al decodificar el token");
-
-        } catch (ExpiredJwtException e) {
-            return ResponseEntity.status(HttpStatus.valueOf(406)).body("El token a expirado");
-
-        } catch (JwtException e) {
-            return ResponseEntity.status(HttpStatus.valueOf(409)).body("Error en la validación del token");
-
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.valueOf(500)).body("Ocurrió un error en el servidor");
-        } 
+            return ResponseEntity.status(HttpStatus.valueOf(500)).body("Ocurrió un error en el servidor: "+ e.getMessage());
+        }
     }
 
 
@@ -257,17 +233,17 @@ public class UsuariosController {
     public ResponseEntity<?> eliminar_usuario(@RequestHeader("Authorization") String authHeader, @RequestBody Map<String, Object> datos_usuario_eliminar) {
         try {
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            String token = authHeader.substring(7);
-            String SECRET_KEY = dotenv.get("SECRET_KEY");
-            Claims token_deployado = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+                String token = authHeader.substring(7);
+                tokenjwt tokenjwt = new tokenjwt();
+                Claims token_deployado = tokenjwt.Deployar_Token(token);
+                
+                String contrasegnaUsuario = (String)datos_usuario_eliminar.get("contrasegnaUsuario");
+            
+                if (contrasegnaUsuario == null || contrasegnaUsuario.isEmpty()) {
+                    throw new IllegalArgumentException("contrasegnaUsuario");
+                }
 
-            String contrasegnaUsuario = (String)datos_usuario_eliminar.get("contrasegnaUsuario");
-
-            if (contrasegnaUsuario == null || contrasegnaUsuario.isEmpty()) {
-                throw new IllegalArgumentException("contrasegnaUsuario");
-            }
-
-            Long id_obtenido_del_token = token_deployado.get("id", Long.class);
+                Long id_obtenido_del_token = token_deployado.get("id", Long.class);
 
                 if (usuarioRepositorio.existsById(id_obtenido_del_token)) {
                     Usuarios_Java usuario = usuarioRepositorio.getById(id_obtenido_del_token);
@@ -295,17 +271,8 @@ public class UsuariosController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(String.format("Datos no enviados en %s",e.getMessage()));
 
-        } catch (UnsupportedJwtException  e) {
-            return ResponseEntity.status(HttpStatus.valueOf(400)).body("Error al decodificar el token");
-
-        } catch (ExpiredJwtException e) {
-            return ResponseEntity.status(HttpStatus.valueOf(406)).body("El token a expirado");
-
-        } catch (JwtException e) {
-            return ResponseEntity.status(HttpStatus.valueOf(409)).body("Error en la validación del token");
-
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.valueOf(500)).body("Ocurrió un error en el servidor");
-        } 
+            return ResponseEntity.status(HttpStatus.valueOf(500)).body("Ocurrió un error en el servidor: "+ e.getMessage());
+        }
     }
 }
