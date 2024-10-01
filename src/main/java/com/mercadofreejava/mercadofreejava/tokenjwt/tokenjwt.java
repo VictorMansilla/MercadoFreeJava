@@ -3,9 +3,6 @@ package com.mercadofreejava.mercadofreejava.tokenjwt;
 import java.util.Date;
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
 import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
